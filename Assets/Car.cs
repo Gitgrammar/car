@@ -8,6 +8,16 @@ public class Car : MonoBehaviour
     public float maxMotorTorque;
     public float maxSteeringAngle;
 
+    public void ApplyLocalPositionToVisuals(WheelCollider collider)
+    {
+        Transform visualWheel = collider.transform.GetChild(0);
+        Vector3 position;
+        Quaternion rotation;
+        collider.GetWorldPose(out position, out rotation);
+        visualWheel.transform.position = position;
+        visualWheel.transform.rotation = rotation;
+    }
+
     public void FixedUpdate()
     {
         float motor = maxMotorTorque * Input.GetAxis("Vertical");
@@ -24,6 +34,8 @@ public class Car : MonoBehaviour
                 axleInfo.leftWheel.motorTorque = motor;
                 axleInfo.rightWheel.motorTorque = motor;
             }
+            ApplyLocalPositionToVisuals(axleInfo.rightWheel);
+            ApplyLocalPositionToVisuals(axleInfo.leftWheel);
         }
     }
 
